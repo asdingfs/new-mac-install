@@ -1,6 +1,6 @@
 #!/bin/zsh
-
-# install script for MacOSX Catalina
+# install script for macOS BigSur
+# IMPORTANT NOTE: make sure to enable Full Disk Access to Terminal.app before continuing (in Security & Privacy)
 
 # install xcode command line tools
 xcode-select --install
@@ -10,32 +10,88 @@ export ROOT=/System/Volumes/Data
 export HOME=${ROOT}/Users/$(whoami)
 cd ~/
 
-# install homebrew
+# install homebrew & update
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+brew update
+
+# install brew version of zsh & rerun shell
+brew install zsh
+exec zsh
 
 # tap 3rd party packages
-brew update
 brew tap homebrew/cask-fonts
 
-# note in MacOSX CATALINA, you need to grant full disk access to the terminal app that you're running
+# NOTE: if you start encountering this weird error when installing packages:
+# Errno::EPERM: Operation not permitted @ rb_sysopen - /System/Volumes/Data/Users/asdingfs/Library/Logs/Homebrew/z/00.options.out
+# good workaround is to temporarily disable this line. The way to do so is:
+#   1. first run export HOMEBREW_DEVELOPER=1, this will disable stashing everytime you make changes to Homebrew ruby script
+#   2. go to /usr/local/Homebrew/Library/Homebrew/build.rb, search for def install method
+#   3. search for 00.options.out and comment out (formula.logs/"00.options.out").write \
+#            "#{formula.full_name} #{formula.build.used_options.sort.join(" ")}".strip
+#   4. rerun brew install, it should work now         
 
-# packages to install in this script
-BREW_PACKAGES=(zsh wget curl z ripgrep ag w3m pandoc git python postgres redis node kubernetes-cli kubectx imagemagick@6)
+# packages to install using brew install
+BREW_PACKAGES=(wget curl z ripgrep ag w3m pandoc git python postgres redis node kubernetes-cli kubectx imagemagick@6 svn openssl readline sqlite3 xz zlib)
 # TODO: additional brew packages: texinfo
-CASK_PACKAGES=(1password paragon-ntfs omnidisksweeper onyx app cleaner emacs iterm2 karabiner-elements shiftit scroll-reverser font-inconsolata font-latin-modern-math fluid dropbox firefox franz telegram skype flume tunnelblick spotify dash postman docker android-file-transfer android-studio vysor google-chrome blender figma sketch gimp inkscape handbrake mediahuman-audio-converter mediahuman-youtube-downloader musicbrainz-picard pdf-expert musescore sequential send-to-kindle calibre flux itsycal vlc swinsian elmedia-player parsec steam openemu transmission)
+brew install "${BREW_PACKAGES[@]}"
+
+# packages to install using brew install —cask
 # TODO: additional cask packages: mactex
-PIP_PACKAGES=(awscli)
+brew install —-cask 1password \
+  paragon-ntfs \
+  omnidisksweeper \
+  onyx \
+  appcleaner \
+  emacs \
+  iterm2 \
+  karabiner-elements \
+  shiftit \
+  scroll-reverser \
+  font-inconsolata \
+  font-latin-modern-math \
+  fluid \
+  dropbox \
+  firefox \
+  franz \
+  telegram \
+  skype \
+  flume \
+  tunnelblick \
+  spotify \
+  dash \
+  postman \
+  docker \
+  android-file-transfer \
+  android-studio \
+  figma \
+  sketch \
+  gimp \
+  inkscape \
+  handbrake \
+  mediahuman-audio-converter \
+  mediahuman-youtube-downloader \
+  musicbrainz-picard \
+  pdf-expert \
+  musescore \
+  sequential \
+  send-to-kindle \
+  calibre \
+  flux \
+  vlc \
+  swinsian \
+  elmedia-player \
+  parsec \
+  steam \
+  transmission
 
 # apps to install manually:
 # 1. Use Fluid to build native app out of web pages:
-#     - Asana
 # 2. Download from AppStore:
 #     - Snap (shortcuts)
-#     - Magnet (like ShiftIt)
 #     - Monity: https://monityapp.com/ (MacOSX Status Monitoring)
 #     - Battery Monitor: Health, Info (Battery Health & Display)
 #     - Clocker (timezone)
-#     - JIRA Cloud App
+#     - Calendar 366 II (nice calendar view)
 #     - Relax Melodies Premium
 #     - Typesy/Typist
 #.    - Spark
@@ -53,30 +109,23 @@ PIP_PACKAGES=(awscli)
 #     - visit: https://formulae.brew.sh/cask/ for full list of casks
 #     - brew install texinfo/brew cask install mactex
 
-# install packages
-alias pip=pip3
-brew install "${BREW_PACKAGES[@]}"
-brew cask install "${CASK_PACKAGES[@]}"
-pip install "${PIP_PACKAGES[@]}"
-
 # force link some weird packages
 brew link --force imagemagick@6
 
-# install emacs file & system configuration files
-git clone https://github.com/asdingfs/macosx-emacs-init.git .emacs.d/
-
-# setting up ssh keys, recommended to store keys inside ~/.ssh/keys
+# setting up ssh keys for code repositories, and add them to keychain
 mkdir -p $HOME/.ssh/keys
 echo "Setting up ssh keys for GitHub access..."
-ssh-keygen -t rsa -C "github:anthonysetiawan.ding@gmail.com" -b 4096
-echo "Setting up ssh keys for GitLab access..."
-ssh-keygen -t rsa -C "gitlab:anthonysetiawan.ding@gmail.com" -b 4096
+ssh-keygen -t rsa -C "github:anthonysetiawan.ding@gmail.com" -b 4096 -f "/Users/asdingfs/.ssh/keys/github_rsa"
+ssh-add -K ~/.ssh/keys/github_rsa
+echo "Setting up ssh keys for Gitlab access..."
+ssh-keygen -t rsa -C "gitlab:anthonysetiawan.ding@gmail.com" -b 4096 -f "/Users/asdingfs/.ssh/keys/gitlab_rsa"
+ssh-add -K ~/.ssh/keys/gitlab_rsa
+echo "Setting up ssh keys for Bitbucket access..."
+ssh-keygen -t rsa -C "bitbucket:anthonysetiawan.ding@gmail.com" -b 4096 -f "/Users/asdingfs/.ssh/keys/bitbucket_rsa"
+ssh-add -K ~/.ssh/keys/bitbucket_rsa
 
-# setting up ssh keys for Hubble
-ssh-keygen -t rsa -C "amazon:anthony@hubble.com" -b 4096
-
-# to add to keychain
-# ssh-add -K ~/.ssh/keys/<private key>
+# install emacs file & system configuration files
+git clone https://github.com/asdingfs/macosx-emacs-init.git .emacs.d/
 
 # soft-link system config files
 # all .zlogin, .zshenv, .zshrc are set to be load from $ZDOTDIR
@@ -85,21 +134,29 @@ ssh-keygen -t rsa -C "amazon:anthony@hubble.com" -b 4096
 cp $HOME/.emacs.d/.files.d/zsh/home.zshenv $HOME/.zshenv # sets ZDOTDIR in $HOME/.zshenv, according to: https://www.reddit.com/r/zsh/comments/3ubrdr/proper_way_to_set_zdotdir/
 . $HOME/.zshenv # load the env variable
 
-# install oh-my-zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+# initialize all modules inside the emacs folder
+cd .emacs.d
+git submodule update --init
+compaudit | xargs chmod g-w # disable the annoying zsh compinit: insecure directory warning
+cd $HOME
 
 # setup emacs scripts
-ln -s $HOME/.emacs.d/.files.d/es $ROOT/usr/local/bin
-ln -s $HOME/.emacs.d/.files.d/ec $ROOT/usr/local/bin
-ln -s $HOME/.emacs.d/.files.d/em $ROOT/usr/local/bin
-chmod 755 $HOME/.emacs.d/.files.d/es
-chmod 755 $HOME/.emacs.d/.files.d/ec
-chmod 755 $HOME/.emacs.d/.files.d/em
+ln -s $HOME/.emacs.d/.files.d/emacs/es $ROOT/usr/local/bin
+ln -s $HOME/.emacs.d/.files.d/emacs/ec $ROOT/usr/local/bin
+ln -s $HOME/.emacs.d/.files.d/emacs/em $ROOT/usr/local/bin
+chmod 755 $HOME/.emacs.d/.files.d/emacs/es
+chmod 755 $HOME/.emacs.d/.files.d/emacs/ec
+chmod 755 $HOME/.emacs.d/.files.d/emacs/em
 chmod 755 $ROOT/usr/local/bin/es
 chmod 755 $ROOT/usr/local/bin/ec
 chmod 755 $ROOT/usr/local/bin/em
 
-# fix emacs compatibility with MacOSX Catalina, https://spin.atomicobject.com/2019/12/12/fixing-emacs-macos-catalina/
+# add emacs daemon as launchagent
+ln -s $HOME/.emacs.d/.files.d/emacs/gnu.emacs.daemon.LaunchAtLogin.agent.plist $HOME/Library/LaunchAgents/
+echo "NOTE: don't forget to add the Emacs Client inside the emacs folder here to Snap!"
+
+
+# fix emacs compatibility with MacOSX BigSur, https://spin.atomicobject.com/2019/12/12/fixing-emacs-macos-catalina/
 # also on: https://medium.com/@holzman.simon/emacs-on-macos-catalina-10-15-in-2019-79ff713c1ccc
 # remember to grant Full Disk Access to Emacs
 cd $ROOT/Applications/Emacs.app/Contents/MacOS
@@ -114,15 +171,8 @@ ln -s $HOME/.emacs.d/.files.d/ssh_config $HOME/.ssh/config
 ln -s $HOME/.emacs.d/.files.d/karabiner_config $HOME/.config/karabiner
 
 # setup themes
+echo "NOTE: there is already a synced configuration. Please set Preferences > General > Preferences to Load preferences froma. custom folder or URL and set the folder to /Users/asdingfs/.emacs.d/.files.d/iterm_config"
 open $HOME/.emacs.d/.files.d/Tomorrow\ Night\ Eighties.itermcolors
-
-# install kubernetes
-echo "Setting up kubernetes..."
-aws configure
-curl https://amazon-eks.s3-us-west-2.amazonaws.com/1.11.5/2018-12-06/bin/darwin/amd64/aws-iam-authenticator -o aws-iam-authenticator
-cp aws-iam-authenticator $ROOT/usr/local/bin
-# aws eks update-kubeconfig --name eks-dev-cluster
-aws eks update-kubeconfig --name eks-prod-cluster
 
 # run at startup
 brew services start postgresql
@@ -131,10 +181,6 @@ brew services start
 
 # install ruby
 \curl -sSL https://get.rvm.io | bash -s stable
-
-
-# other customisations
-defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 70 '<dict><key>enabled</key><false/></dict>' # disable CMD+CTRL+D
 
 # install 1Password extensions
 open https://1password.com/downloads/mac/
