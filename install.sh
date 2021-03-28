@@ -152,19 +152,22 @@ chmod 755 $ROOT/usr/local/bin/ec
 chmod 755 $ROOT/usr/local/bin/em
 
 # add emacs daemon as launchagent
+open $ROOT/Applications/Emacs.app
 ln -s $HOME/.emacs.d/.files.d/emacs/gnu.emacs.daemon.LaunchAtLogin.agent.plist $HOME/Library/LaunchAgents/
 echo "NOTE: don't forget to add the Emacs Client inside the emacs folder here to Snap!"
-
 
 # fix emacs compatibility with MacOSX BigSur, https://spin.atomicobject.com/2019/12/12/fixing-emacs-macos-catalina/
 # also on: https://medium.com/@holzman.simon/emacs-on-macos-catalina-10-15-in-2019-79ff713c1ccc
 # remember to grant Full Disk Access to Emacs
+# also NOTE: please open Emacs first before executing these lines
 cd $ROOT/Applications/Emacs.app/Contents/MacOS
 mv Emacs Emacs-launcher # for backup
-cp Emacs-x86_64-10_14 Emacs
+ln -s Emacs-x86_64-10_14 Emacs
 cd /Applications/Emacs.app/Contents/
 rm -rf _CodeSignature
 cd ~/
+
+
 
 # setup karabiner & ssh config
 ln -s $HOME/.emacs.d/.files.d/ssh_config $HOME/.ssh/config
