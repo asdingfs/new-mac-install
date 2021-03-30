@@ -37,7 +37,7 @@ brew install "${BREW_PACKAGES[@]}"
 
 # packages to install using brew install —cask
 # TODO: additional cask packages: mactex
-CASK_PACKAGES=(1password paragon-ntfs omnidisksweeper onyx appcleaner emacs iterm2 karabiner-elements shiftit scroll-reverser \
+CASK_PACKAGES=(1password keka paragon-ntfs omnidisksweeper onyx appcleaner emacs iterm2 karabiner-elements shiftit scroll-reverser \
   font-inconsolata font-latin-modern-math fluid dropbox firefox franz telegram skype homebrew/cask/flume tunnelblick spotify homebrew/cask/dash postman homebrew/cask/docker \
   android-file-transfer android-studio figma sketch gimp inkscape handbrake mediahuman-audio-converter mediahuman-youtube-downloader \
   musicbrainz-picard pdf-expert musescore sequential send-to-kindle calibre flux vlc swinsian elmedia-player parsec steam transmission)
@@ -66,6 +66,7 @@ brew install "${CASK_PACKAGES[@]}"
 #     - TeamViewer
 #     - Discord
 #     - Eagle (https://eagle.cool/download/)
+#     - Reflector 4 (https://www.airsquirrels.com/reflector/try)
 # 4. Install later on brew/cask if needed:
 #     - visit: https://formulae.brew.sh/cask/ for full list of casks
 #     - brew install texinfo/brew cask install mactex
@@ -115,6 +116,7 @@ chmod 755 $ROOT/usr/local/bin/em
 # add emacs daemon as launchagent
 open $ROOT/Applications/Emacs.app
 ln -s $HOME/.emacs.d/.files.d/emacs/gnu.emacs.daemon.LaunchAtLogin.agent.plist $HOME/Library/LaunchAgents/
+ln -s ~/.emacs.d/.files.d/emacs/Emacs\ Client.app /Applications/Emacs\ Client.app
 echo "NOTE: don't forget to add the Emacs Client inside the emacs folder here to Snap!"
 
 # fix emacs compatibility with MacOSX BigSur, https://spin.atomicobject.com/2019/12/12/fixing-emacs-macos-catalina/
@@ -128,8 +130,6 @@ cd /Applications/Emacs.app/Contents/
 rm -rf _CodeSignature
 cd ~/
 
-
-
 # setup karabiner & ssh config
 ln -s $HOME/.emacs.d/.files.d/ssh_config $HOME/.ssh/config
 ln -s $HOME/.emacs.d/.files.d/karabiner_config $HOME/.config/karabiner
@@ -141,7 +141,7 @@ open $HOME/.emacs.d/.files.d/Tomorrow\ Night\ Eighties.itermcolors
 # run at startup
 brew services start postgresql
 brew services start redis
-brew services start
+launchctl load $HOME/Library/LaunchAgents/gnu.emacs.daemon.LaunchAtLogin.agent.plist
 
 # install ruby
 \curl -sSL https://get.rvm.io | bash -s stable
