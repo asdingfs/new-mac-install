@@ -12,11 +12,11 @@ cd ~/
 
 # install homebrew & update
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
-brew update
 
 # install brew version of zsh & rerun shell
 brew install zsh
-exec zsh
+# NOTE: at this point, open a new tab in the terminal to refresh the environment
+# NOTE: also, grant FULL DISK ACCESS to Terminal.app before continuing
 
 # tap 3rd party packages
 brew tap homebrew/cask-fonts
@@ -37,52 +37,11 @@ brew install "${BREW_PACKAGES[@]}"
 
 # packages to install using brew install —cask
 # TODO: additional cask packages: mactex
-brew install —-cask 1password \
-  paragon-ntfs \
-  omnidisksweeper \
-  onyx \
-  appcleaner \
-  emacs \
-  iterm2 \
-  karabiner-elements \
-  shiftit \
-  scroll-reverser \
-  font-inconsolata \
-  font-latin-modern-math \
-  fluid \
-  dropbox \
-  firefox \
-  franz \
-  telegram \
-  skype \
-  flume \
-  tunnelblick \
-  spotify \
-  dash \
-  postman \
-  docker \
-  android-file-transfer \
-  android-studio \
-  figma \
-  sketch \
-  gimp \
-  inkscape \
-  handbrake \
-  mediahuman-audio-converter \
-  mediahuman-youtube-downloader \
-  musicbrainz-picard \
-  pdf-expert \
-  musescore \
-  sequential \
-  send-to-kindle \
-  calibre \
-  flux \
-  vlc \
-  swinsian \
-  elmedia-player \
-  parsec \
-  steam \
-  transmission
+CASK_PACKAGES=(1password paragon-ntfs omnidisksweeper onyx appcleaner emacs iterm2 karabiner-elements shiftit scroll-reverser \
+  font-inconsolata font-latin-modern-math fluid dropbox firefox franz telegram skype homebrew/cask/flume tunnelblick spotify homebrew/cask/dash postman homebrew/cask/docker \
+  android-file-transfer android-studio figma sketch gimp inkscape handbrake mediahuman-audio-converter mediahuman-youtube-downloader \
+  musicbrainz-picard pdf-expert musescore sequential send-to-kindle calibre flux vlc swinsian elmedia-player parsec steam transmission)
+brew install "${CASK_PACKAGES[@]}"
 
 # apps to install manually:
 # 1. Use Fluid to build native app out of web pages:
