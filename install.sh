@@ -48,12 +48,13 @@ brew install "${CASK_PACKAGES[@]}"
 # 2. Download from AppStore:
 #     - Snap (shortcuts)
 #     - Monity: https://monityapp.com/ (MacOSX Status Monitoring)
-#     - Battery Monitor: Health, Info (Battery Health & Display)
+#     - Battery Monitor: Health, Info (Battery Health & Display) (only up to Catalina)
 #     - Clocker (timezone)
 #     - Calendar 366 II (nice calendar view)
 #     - Relax Melodies Premium
 #     - Typesy/Typist
 #.    - Spark
+#     - Drafts
 # 3. Manually download & install from websites:
 #     - Affinity Photo
 #     - Affinity Designer
@@ -64,6 +65,7 @@ brew install "${CASK_PACKAGES[@]}"
 #     - Palette Master Element (BENQ Monitor hardware calibration)
 #     - TeamViewer
 #     - Discord
+#     - Eagle (https://eagle.cool/download/)
 # 4. Install later on brew/cask if needed:
 #     - visit: https://formulae.brew.sh/cask/ for full list of casks
 #     - brew install texinfo/brew cask install mactex
