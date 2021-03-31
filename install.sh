@@ -37,7 +37,7 @@ brew install "${BREW_PACKAGES[@]}"
 
 # packages to install using brew install —cask
 # TODO: additional cask packages: mactex
-CASK_PACKAGES=(1password keka paragon-ntfs omnidisksweeper onyx appcleaner emacs iterm2 karabiner-elements shiftit scroll-reverser \
+CASK_PACKAGES=(alfred 1password keka paragon-ntfs omnidisksweeper onyx appcleaner emacs iterm2 karabiner-elements shiftit scroll-reverser \
   font-inconsolata font-latin-modern-math fluid dropbox firefox franz telegram skype homebrew/cask/flume tunnelblick spotify homebrew/cask/dash postman homebrew/cask/docker \
   android-file-transfer android-studio figma sketch gimp inkscape handbrake mediahuman-audio-converter mediahuman-youtube-downloader \
   musicbrainz-picard pdf-expert musescore sequential send-to-kindle calibre flux vlc swinsian elmedia-player parsec steam transmission)
@@ -55,6 +55,7 @@ brew install "${CASK_PACKAGES[@]}"
 #     - Typesy/Typist
 #.    - Spark
 #     - Drafts
+#     - Oxford Advanced Learner's Dictionary OALD9
 # 3. Manually download & install from websites:
 #     - Affinity Photo
 #     - Affinity Designer
@@ -67,6 +68,7 @@ brew install "${CASK_PACKAGES[@]}"
 #     - Discord
 #     - Eagle (https://eagle.cool/download/)
 #     - Reflector 4 (https://www.airsquirrels.com/reflector/try)
+#     - SpyderX Pro (https://spyderx.datacolor.com/activate)
 # 4. Install later on brew/cask if needed:
 #     - visit: https://formulae.brew.sh/cask/ for full list of casks
 #     - brew install texinfo/brew cask install mactex
@@ -146,5 +148,11 @@ launchctl load $HOME/Library/LaunchAgents/gnu.emacs.daemon.LaunchAtLogin.agent.p
 # install ruby
 \curl -sSL https://get.rvm.io | bash -s stable
 
+# disable Cmd+Ctrl+D Binding in Mac
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 70 '<dict><key>enabled</key><false/></dict>'
+
 # install 1Password extensions
 open https://1password.com/downloads/mac/
+
+# things to do post install
+#  - Download Terminology Dictionary for MacOS Dictionary: https://agiletortoise.com/terminology/mac/
